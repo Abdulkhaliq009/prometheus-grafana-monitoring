@@ -9,6 +9,41 @@ A ready-to-run monitoring stack for Docker containers and the host machine, buil
 
 ![Docker Containers dashboard](screenshots/dashboard.png)
 
+## Architecture
+
+```mermaid
+graph TB
+    Browser["Your Browser"]
+
+    subgraph Docker["Docker Desktop — 'monitoring' network"]
+        NE["node-exporter<br/>:9100"]
+        CA["cAdvisor<br/>:8080"]
+        PR["Prometheus<br/>:9090"]
+        GR["Grafana<br/>:3000"]
+
+        NE -- "scraped by" --> PR
+        CA -- "scraped by" --> PR
+        PR -- "scrapes itself" --> PR
+        PR -- "datasource" --> GR
+    end
+
+    HostOS[("Host OS<br/>CPU / RAM / Disk")]
+    Containers[("Docker Engine<br/>running containers")]
+
+    HostOS -.-> NE
+    Containers -.-> CA
+
+    Browser -- "localhost:3002" --> GR
+    Browser -- "localhost:9090" --> PR
+    Browser -- "localhost:8082" --> CA
+```
+
+- **node-exporter** reads host-level metrics (CPU, memory, disk) directly from the OS.
+- **cAdvisor** reads per-container metrics from the Docker Engine.
+- **Prometheus** scrapes both exporters (plus itself) on a timer and stores the time-series data.
+- **Grafana** queries Prometheus as its datasource and renders the dashboards.
+- All four services sit on the same Docker Compose network and reach each other by service name; only the ports you actually need are published to `localhost`.
+
 ## Project structure
 
 ```
