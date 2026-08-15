@@ -88,6 +88,24 @@ Set your own admin password by editing the `grafana` service environment in `doc
       - GF_SECURITY_ADMIN_PASSWORD=change-me
 ```
 
+## Email alerting
+
+The stack ships with one provisioned alert rule (**Host CPU usage high** — fires when host CPU stays above 80% for 5 minutes) wired to an email contact point.
+
+To make it actually send email:
+
+1. Enable 2-Step Verification on the Gmail account, then generate an [App Password](https://myaccount.google.com/apppasswords).
+2. Copy `.env.example` to `.env` and fill in:
+   ```
+   GF_SMTP_USER=your-email@gmail.com
+   GF_SMTP_PASSWORD=xxxx xxxx xxxx xxxx
+   ```
+   (`.env` is gitignored — it never gets committed.)
+3. Restart Grafana: `docker compose up -d grafana`
+4. In Grafana → Alerting → Contact points → find **email-alerts** → **Test** to confirm delivery.
+
+The alert recipient address is set in `grafana/provisioning/alerting/contactpoints.yaml`; edit it there to change who gets notified.
+
 ## Notes
 
 - cAdvisor mounts host paths (`/`, `/var/run`, `/sys`, `/var/lib/docker`) read-only to inspect running containers. This works out of the box with Docker Desktop's Linux VM backend on Windows.
