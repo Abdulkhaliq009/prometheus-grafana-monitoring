@@ -1,3 +1,5 @@
+name: prometheus-grafana
+
 networks:
   monitoring:
     driver: bridge
