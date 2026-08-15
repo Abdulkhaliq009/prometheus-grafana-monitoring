@@ -10,7 +10,7 @@ A ready-to-run monitoring stack for Docker containers and the host machine, buil
 ## Project structure
 
 ```
-New folder/
+prometheus-grafana-monitoring/
 ├── docker-compose.yml
 ├── prometheus/
 │   └── prometheus.yml          # scrape config (prometheus, node-exporter, cadvisor)
