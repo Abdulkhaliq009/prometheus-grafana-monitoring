@@ -7,6 +7,8 @@ A ready-to-run monitoring stack for Docker containers and the host machine, buil
 - **cAdvisor** — per-container CPU / memory / network metrics
 - **node-exporter** — host-level CPU / memory / disk metrics
 
+![Docker Containers dashboard](screenshots/dashboard.png)
+
 ## Project structure
 
 ```
